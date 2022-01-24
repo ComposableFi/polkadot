@@ -576,6 +576,18 @@ pub type Executive = frame_executive::Executive<
 
 pub type MmrHashing = <Runtime as pallet_mmr::Config>::Hashing;
 pub type MmrLeaf = <<Runtime as pallet_mmr::Config>::LeafData as LeafDataProvider>::LeafData;
+#[cfg(feature = "runtime-benchmarks")]
+#[macro_use]
+extern crate frame_benchmarking;
+
+#[cfg(feature = "runtime-benchmarks")]
+mod benches {
+	define_benchmarks!(
+		[pallet_bridge_messages,
+		MessagesBench::<Runtime, WithMillauMessagesInstance>]
+		[pallet_bridge_grandpa, BridgeMillauGrandpa]
+	);
+}
 
 impl_runtime_apis! {
 	impl sp_api::Core<Block> for Runtime {
@@ -973,18 +985,15 @@ impl_runtime_apis! {
 			Vec<frame_benchmarking::BenchmarkList>,
 			Vec<frame_support::traits::StorageInfo>,
 		) {
-			use frame_benchmarking::{list_benchmark, Benchmarking, BenchmarkList};
+			use frame_benchmarking::{Benchmarking, BenchmarkList};
 			use frame_support::traits::StorageInfoTrait;
 
 			use pallet_bridge_messages::benchmarking::Pallet as MessagesBench;
 
 			let mut list = Vec::<BenchmarkList>::new();
-
-			list_benchmark!(list, extra, pallet_bridge_messages, MessagesBench::<Runtime, WithMillauMessagesInstance>);
-			list_benchmark!(list, extra, pallet_bridge_grandpa, BridgeMillauGrandpa);
+			list_benchmarks!(list, extra);
 
 			let storage_info = AllPalletsWithSystem::storage_info();
-
 			return (list, storage_info)
 		}
 
@@ -994,7 +1003,7 @@ impl_runtime_apis! {
 			Vec<frame_benchmarking::BenchmarkBatch>,
 			sp_runtime::RuntimeString,
 		> {
-			use frame_benchmarking::{Benchmarking, BenchmarkBatch, add_benchmark, TrackedStorageKey};
+			use frame_benchmarking::{Benchmarking, BenchmarkBatch, TrackedStorageKey};
 			use frame_support::traits::StorageInfoTrait;
 
 			let whitelist: Vec<TrackedStorageKey> = vec![
@@ -1179,13 +1188,7 @@ impl_runtime_apis! {
 				}
 			}
 
-			add_benchmark!(
-				params,
-				batches,
-				pallet_bridge_messages,
-				MessagesBench::<Runtime, WithMillauMessagesInstance>
-			);
-			add_benchmark!(params, batches, pallet_bridge_grandpa, BridgeMillauGrandpa);
+			add_benchmarks!(params,	batches);
 
 			Ok(batches)
 		}
