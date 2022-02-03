@@ -1095,7 +1095,6 @@ impl pallet_multisig::Config for Runtime {
 }
 
 pub type MmrHashing = <Runtime as pallet_mmr::Config>::Hashing;
-pub type MmrLeaf = <<Runtime as pallet_mmr::Config>::LeafData as mmr::LeafDataProvider>::LeafData;
 
 #[cfg(not(feature = "disable-runtime-api"))]
 sp_api::impl_runtime_apis! {
@@ -1376,7 +1375,7 @@ sp_api::impl_runtime_apis! {
 		fn verify_proof(leaf: mmr::EncodableOpaqueLeaf, proof: mmr::Proof<Hash>)
 			-> Result<(), mmr::Error>
 		{
-
+			type MmrLeaf = <<Runtime as pallet_mmr::Config>::LeafData as mmr::LeafDataProvider>::LeafData;
 			let leaf: MmrLeaf = leaf
 				.into_opaque_leaf()
 				.try_decode()
@@ -1389,7 +1388,6 @@ sp_api::impl_runtime_apis! {
 			leaf: mmr::EncodableOpaqueLeaf,
 			proof: mmr::Proof<Hash>
 		) -> Result<(), mmr::Error> {
-			type MmrHashing = <Runtime as pallet_mmr::Config>::Hashing;
 			let node = mmr::DataOrHash::Data(leaf.into_opaque_leaf());
 			pallet_mmr::verify_leaf_proof::<MmrHashing, _>(root, node, proof)
 		}
@@ -1404,6 +1402,7 @@ sp_api::impl_runtime_apis! {
 		fn verify_batch_proof(leaves: Vec<mmr::EncodableOpaqueLeaf>, proof: mmr::BatchProof<Hash>)
 			-> Result<(), mmr::Error>
 		{
+			type MmrLeaf = <<Runtime as pallet_mmr::Config>::LeafData as mmr::LeafDataProvider>::LeafData;
 			let leaves = leaves.into_iter().map(|leaf|
 				leaf.into_opaque_leaf()
 				.try_decode()

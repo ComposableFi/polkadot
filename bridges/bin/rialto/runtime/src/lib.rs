@@ -575,7 +575,6 @@ pub type Executive = frame_executive::Executive<
 >;
 
 pub type MmrHashing = <Runtime as pallet_mmr::Config>::Hashing;
-pub type MmrLeaf = <<Runtime as pallet_mmr::Config>::LeafData as LeafDataProvider>::LeafData;
 
 impl_runtime_apis! {
 	impl sp_api::Core<Block> for Runtime {
@@ -642,7 +641,7 @@ impl_runtime_apis! {
 		fn verify_proof(leaf: EncodableOpaqueLeaf, proof: MmrProof<Hash>)
 			-> Result<(), MmrError>
 		{
-
+			type MmrLeaf = <<Runtime as pallet_mmr::Config>::LeafData as LeafDataProvider>::LeafData;
 			let leaf: MmrLeaf = leaf
 				.into_opaque_leaf()
 				.try_decode()
@@ -655,7 +654,6 @@ impl_runtime_apis! {
 			leaf: EncodableOpaqueLeaf,
 			proof: MmrProof<Hash>
 		) -> Result<(), MmrError> {
-			type MmrHashing = <Runtime as pallet_mmr::Config>::Hashing;
 			let node = DataOrHash::Data(leaf.into_opaque_leaf());
 			pallet_mmr::verify_leaf_proof::<MmrHashing, _>(root, node, proof)
 		}
@@ -670,6 +668,7 @@ impl_runtime_apis! {
 		fn verify_batch_proof(leaves: Vec<EncodableOpaqueLeaf>, proof: MmrBatchProof<Hash>)
 			-> Result<(), MmrError>
 		{
+			type MmrLeaf = <<Runtime as pallet_mmr::Config>::LeafData as LeafDataProvider>::LeafData;
 			let leaves = leaves.into_iter().map(|leaf|
 				leaf.into_opaque_leaf()
 				.try_decode()
