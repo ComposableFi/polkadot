@@ -6,7 +6,11 @@ path = "src/main.rs"
 name = "polkadot"
 description = "Implementation of a `https://polkadot.network` node in Rust based on the Substrate framework."
 license = "GPL-3.0-only"
+<<<<<<< HEAD
 version = "0.9.19"
+=======
+version = "0.9.18"
+>>>>>>> 9ed0c98204d25eaad8a6b40248daee8e6a40d111
 authors = ["Parity Technologies <admin@parity.io>"]
 edition = "2021"
 rust-version = "1.57.0" # custom profiles
@@ -21,8 +25,13 @@ parity-util-mem = { version = "0.11.0", default-features = false, features = ["j
 assert_cmd = "2.0.4"
 nix = "0.24.1"
 tempfile = "3.2.0"
+<<<<<<< HEAD
 tokio = "1.18.1"
 remote-externalities = { git = "https://github.com/paritytech/substrate", branch = "master" }
+=======
+tokio = "1.17.0"
+remote-externalities = { git = "https://github.com/paritytech/substrate", branch = "polkadot-v0.9.18" }
+>>>>>>> 9ed0c98204d25eaad8a6b40248daee8e6a40d111
 polkadot-core-primitives = { path = "core-primitives" }
 
 [workspace]

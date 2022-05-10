@@ -1,6 +1,10 @@
 [package]
 name = "metered-channel"
+<<<<<<< HEAD
 version = "0.9.19"
+=======
+version = "0.9.18"
+>>>>>>> 9ed0c98204d25eaad8a6b40248daee8e6a40d111
 authors = ["Parity Technologies <admin@parity.io>"]
 edition = "2021"
 description = "Channels with attached Meters"

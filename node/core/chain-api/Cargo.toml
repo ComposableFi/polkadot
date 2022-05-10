@@ -1,18 +1,27 @@
 [package]
 name = "polkadot-node-core-chain-api"
+<<<<<<< HEAD
 version = "0.9.19"
+=======
+version = "0.9.18"
+>>>>>>> 9ed0c98204d25eaad8a6b40248daee8e6a40d111
 authors = ["Parity Technologies <admin@parity.io>"]
 edition = "2021"
 
 [dependencies]
 futures = "0.3.21"
+<<<<<<< HEAD
 gum = { package = "tracing-gum", path = "../../gum" }
 sp-blockchain = { git = "https://github.com/paritytech/substrate", branch = "master" }
+=======
+tracing = "0.1.31"
+sp-blockchain = { git = "https://github.com/paritytech/substrate", branch = "polkadot-v0.9.18" }
+>>>>>>> 9ed0c98204d25eaad8a6b40248daee8e6a40d111
 polkadot-primitives = { path = "../../../primitives" }
 polkadot-subsystem = { package = "polkadot-node-subsystem", path = "../../subsystem" }
 polkadot-node-subsystem-util = { path = "../../subsystem-util" }
-sc-client-api = { git = "https://github.com/paritytech/substrate", branch = "master" }
-sc-consensus-babe = { git = "https://github.com/paritytech/substrate", branch = "master" }
+sc-client-api = { git = "https://github.com/paritytech/substrate", branch = "polkadot-v0.9.18" }
+sc-consensus-babe = { git = "https://github.com/paritytech/substrate", branch = "polkadot-v0.9.18" }
 
 [dev-dependencies]
 futures = { version = "0.3.21", features = ["thread-pool"] }
@@ -20,4 +29,4 @@ maplit = "1.0.2"
 parity-scale-codec = "3.1.2"
 polkadot-node-primitives = { path = "../../primitives" }
 polkadot-node-subsystem-test-helpers = { path = "../../subsystem-test-helpers" }
-sp-core = { git = "https://github.com/paritytech/substrate", branch = "master" }
+sp-core = { git = "https://github.com/paritytech/substrate", branch = "polkadot-v0.9.18" }

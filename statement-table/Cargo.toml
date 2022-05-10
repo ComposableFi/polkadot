@@ -1,10 +1,19 @@
 [package]
 name = "polkadot-statement-table"
+<<<<<<< HEAD
 version = "0.9.19"
+=======
+version = "0.9.18"
+>>>>>>> 9ed0c98204d25eaad8a6b40248daee8e6a40d111
 authors = ["Parity Technologies <admin@parity.io>"]
 edition = "2021"
 
 [dependencies]
+<<<<<<< HEAD
 parity-scale-codec = { version = "3.1.2", default-features = false, features = ["derive"] }
 sp-core = { git = "https://github.com/paritytech/substrate", branch = "master" }
+=======
+parity-scale-codec = { version = "3.0.0", default-features = false, features = ["derive"] }
+sp-core = { git = "https://github.com/paritytech/substrate", branch = "polkadot-v0.9.18" }
+>>>>>>> 9ed0c98204d25eaad8a6b40248daee8e6a40d111
 primitives = { package = "polkadot-primitives", path = "../primitives" }

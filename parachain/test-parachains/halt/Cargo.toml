@@ -1,6 +1,10 @@
 [package]
 name = "test-parachain-halt"
+<<<<<<< HEAD
 version = "0.9.19"
+=======
+version = "0.9.18"
+>>>>>>> 9ed0c98204d25eaad8a6b40248daee8e6a40d111
 authors = ["Parity Technologies <admin@parity.io>"]
 description = "Test parachain which executes forever"
 edition = "2021"
@@ -9,7 +13,7 @@ build = "build.rs"
 [dependencies]
 
 [build-dependencies]
-substrate-wasm-builder = { git = "https://github.com/paritytech/substrate", branch = "master" }
+substrate-wasm-builder = { git = "https://github.com/paritytech/substrate", branch = "polkadot-v0.9.18" }
 
 [features]
 default = [ "std" ]

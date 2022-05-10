@@ -1,6 +1,10 @@
 [package]
 name = "polkadot-node-core-provisioner"
+<<<<<<< HEAD
 version = "0.9.19"
+=======
+version = "0.9.18"
+>>>>>>> 9ed0c98204d25eaad8a6b40248daee8e6a40d111
 authors = ["Parity Technologies <admin@parity.io>"]
 edition = "2021"
 
@@ -18,8 +22,8 @@ rand = "0.8.5"
 fatality = "0.0.6"
 
 [dev-dependencies]
-sp-application-crypto = { git = "https://github.com/paritytech/substrate", branch = "master" }
-sp-keystore = { git = "https://github.com/paritytech/substrate", branch = "master" }
+sp-application-crypto = { git = "https://github.com/paritytech/substrate", branch = "polkadot-v0.9.18" }
+sp-keystore = { git = "https://github.com/paritytech/substrate", branch = "polkadot-v0.9.18" }
 polkadot-node-subsystem-test-helpers = { path = "../../subsystem-test-helpers" }
 test-helpers = { package = "polkadot-primitives-test-helpers", path = "../../../primitives/test-helpers" }
 

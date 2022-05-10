@@ -3,12 +3,17 @@ authors = ["Parity Technologies <admin@parity.io>"]
 edition = "2021"
 name = "xcm-executor"
 description = "An abstract and configurable XCM message executor."
+<<<<<<< HEAD
 version = "0.9.19"
+=======
+version = "0.9.18"
+>>>>>>> 9ed0c98204d25eaad8a6b40248daee8e6a40d111
 
 [dependencies]
 impl-trait-for-tuples = "0.2.2"
 parity-scale-codec = { version = "3.1.2", default-features = false, features = ["derive"] }
 xcm = { path = "..", default-features = false }
+<<<<<<< HEAD
 sp-std = { git = "https://github.com/paritytech/substrate", branch = "master", default-features = false }
 sp-io = { git = "https://github.com/paritytech/substrate", branch = "master", default-features = false }
 sp-arithmetic = { git = "https://github.com/paritytech/substrate", branch = "master", default-features = false }
@@ -17,6 +22,16 @@ sp-runtime = { git = "https://github.com/paritytech/substrate", branch = "master
 frame-support = { git = "https://github.com/paritytech/substrate", branch = "master", default-features = false }
 log = { version = "0.4.17", default-features = false }
 frame-benchmarking = { git = "https://github.com/paritytech/substrate", branch = "master" , default-features = false, optional = true }
+=======
+sp-std = { git = "https://github.com/paritytech/substrate", default-features = false , branch = "polkadot-v0.9.18" }
+sp-io = { git = "https://github.com/paritytech/substrate", default-features = false , branch = "polkadot-v0.9.18" }
+sp-arithmetic = { git = "https://github.com/paritytech/substrate", default-features = false , branch = "polkadot-v0.9.18" }
+sp-core = { git = "https://github.com/paritytech/substrate", default-features = false , branch = "polkadot-v0.9.18" }
+sp-runtime = { git = "https://github.com/paritytech/substrate", default-features = false , branch = "polkadot-v0.9.18" }
+frame-support = { git = "https://github.com/paritytech/substrate", default-features = false , branch = "polkadot-v0.9.18" }
+log = { version = "0.4.14", default-features = false }
+frame-benchmarking = { git = "https://github.com/paritytech/substrate", default-features = false, optional = true , branch = "polkadot-v0.9.18" }
+>>>>>>> 9ed0c98204d25eaad8a6b40248daee8e6a40d111
 
 [features]
 default = ["std"]
