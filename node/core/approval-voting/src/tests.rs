@@ -31,7 +31,7 @@ use polkadot_node_subsystem::{
 use polkadot_node_subsystem_test_helpers as test_helpers;
 use polkadot_node_subsystem_util::TimeoutExt;
 use polkadot_overseer::HeadSupportsParachains;
-use polkadot_primitives::v1::{
+use polkadot_primitives::v2::{
 	CandidateCommitments, CandidateEvent, CoreIndex, GroupIndex, Header, Id as ParaId,
 	ValidationCode, ValidatorSignature,
 };
@@ -220,7 +220,7 @@ struct MockAssignmentCriteria<Compute, Check>(Compute, Check);
 
 impl<Compute, Check> AssignmentCriteria for MockAssignmentCriteria<Compute, Check>
 where
-	Compute: Fn() -> HashMap<polkadot_primitives::v1::CoreIndex, criteria::OurAssignment>,
+	Compute: Fn() -> HashMap<polkadot_primitives::v2::CoreIndex, criteria::OurAssignment>,
 	Check: Fn(ValidatorIndex) -> Result<DelayTranche, criteria::InvalidAssignment>,
 {
 	fn compute_assignments(
@@ -230,21 +230,21 @@ where
 		_config: &criteria::Config,
 		_leaving_cores: Vec<(
 			CandidateHash,
-			polkadot_primitives::v1::CoreIndex,
-			polkadot_primitives::v1::GroupIndex,
+			polkadot_primitives::v2::CoreIndex,
+			polkadot_primitives::v2::GroupIndex,
 		)>,
-	) -> HashMap<polkadot_primitives::v1::CoreIndex, criteria::OurAssignment> {
+	) -> HashMap<polkadot_primitives::v2::CoreIndex, criteria::OurAssignment> {
 		self.0()
 	}
 
 	fn check_assignment_cert(
 		&self,
-		_claimed_core_index: polkadot_primitives::v1::CoreIndex,
+		_claimed_core_index: polkadot_primitives::v2::CoreIndex,
 		validator_index: ValidatorIndex,
 		_config: &criteria::Config,
 		_relay_vrf_story: polkadot_node_primitives::approval::RelayVRFStory,
 		_assignment: &polkadot_node_primitives::approval::AssignmentCert,
-		_backing_group: polkadot_primitives::v1::GroupIndex,
+		_backing_group: polkadot_primitives::v2::GroupIndex,
 	) -> Result<polkadot_node_primitives::approval::DelayTranche, criteria::InvalidAssignment> {
 		self.1(validator_index)
 	}
@@ -252,7 +252,7 @@ where
 
 impl<F>
 	MockAssignmentCriteria<
-		fn() -> HashMap<polkadot_primitives::v1::CoreIndex, criteria::OurAssignment>,
+		fn() -> HashMap<polkadot_primitives::v2::CoreIndex, criteria::OurAssignment>,
 		F,
 	>
 {
@@ -470,11 +470,14 @@ fn test_harness<T: Future<Output = VirtualOverseer>>(
 
 	let keystore = LocalKeystore::in_memory();
 	let _ = keystore.sr25519_generate_new(
-		polkadot_primitives::v1::PARACHAIN_KEY_TYPE_ID,
+		polkadot_primitives::v2::PARACHAIN_KEY_TYPE_ID,
 		Some(&Sr25519Keyring::Alice.to_seed()),
 	);
 
 	let clock = Box::new(clock);
+	let db = kvdb_memorydb::create(test_constants::NUM_COLUMNS);
+	let db = polkadot_node_subsystem_util::database::kvdb_impl::DbAdapter::new(db, &[]);
+
 	let subsystem = run(
 		context,
 		ApprovalVotingSubsystem::with_config(
@@ -482,7 +485,7 @@ fn test_harness<T: Future<Output = VirtualOverseer>>(
 				col_data: test_constants::TEST_CONFIG.col_data,
 				slot_duration_millis: SLOT_DURATION_MILLIS,
 			},
-			Arc::new(kvdb_memorydb::create(test_constants::NUM_COLUMNS)),
+			Arc::new(db),
 			Arc::new(keystore),
 			sync_oracle,
 			Metrics::default(),
@@ -509,7 +512,7 @@ fn test_harness<T: Future<Output = VirtualOverseer>>(
 }
 
 async fn overseer_send(overseer: &mut VirtualOverseer, msg: FromOverseer<ApprovalVotingMessage>) {
-	tracing::trace!("Sending message:\n{:?}", &msg);
+	gum::trace!("Sending message:\n{:?}", &msg);
 	overseer
 		.send(msg)
 		.timeout(TIMEOUT)
@@ -522,7 +525,7 @@ async fn overseer_recv(overseer: &mut VirtualOverseer) -> AllMessages {
 		.await
 		.expect(&format!("{:?} is enough to receive messages.", TIMEOUT));
 
-	tracing::trace!("Received message:\n{:?}", &msg);
+	gum::trace!("Received message:\n{:?}", &msg);
 
 	msg
 }
@@ -531,7 +534,7 @@ async fn overseer_recv_with_timeout(
 	overseer: &mut VirtualOverseer,
 	timeout: Duration,
 ) -> Option<AllMessages> {
-	tracing::trace!("Waiting for message...");
+	gum::trace!("Waiting for message...");
 	overseer.recv().timeout(timeout).await
 }
 
@@ -601,11 +604,10 @@ async fn check_and_import_approval(
 			overseer_recv(overseer).await,
 			AllMessages::DisputeCoordinator(DisputeCoordinatorMessage::ImportStatements {
 				candidate_hash: c_hash,
-				pending_confirmation,
+				pending_confirmation: None,
 				..
 			}) => {
 				assert_eq!(c_hash, candidate_hash);
-				let _ = pending_confirmation.send(ImportStatementsResult::ValidImport);
 			}
 		);
 	}
@@ -1005,8 +1007,11 @@ fn subsystem_rejects_bad_assignment_ok_criteria() {
 
 #[test]
 fn subsystem_rejects_bad_assignment_err_criteria() {
-	let assignment_criteria =
-		Box::new(MockAssignmentCriteria::check_only(move |_| Err(criteria::InvalidAssignment)));
+	let assignment_criteria = Box::new(MockAssignmentCriteria::check_only(move |_| {
+		Err(criteria::InvalidAssignment(
+			criteria::InvalidAssignmentReason::ValidatorIndexOutOfBounds,
+		))
+	}));
 	let config = HarnessConfigBuilder::default().assignment_criteria(assignment_criteria).build();
 	test_harness(config, |test_harness| async move {
 		let TestHarness { mut virtual_overseer, sync_oracle_handle: _sync_oracle_handle, .. } =
@@ -1043,7 +1048,10 @@ fn subsystem_rejects_bad_assignment_err_criteria() {
 
 		assert_eq!(
 			rx.await,
-			Ok(AssignmentCheckResult::Bad(AssignmentCheckError::InvalidCert(ValidatorIndex(0)))),
+			Ok(AssignmentCheckResult::Bad(AssignmentCheckError::InvalidCert(
+				ValidatorIndex(0),
+				"ValidatorIndexOutOfBounds".to_string(),
+			))),
 		);
 
 		virtual_overseer
@@ -2811,7 +2819,9 @@ fn pre_covers_dont_stall_approval() {
 		move |validator_index| match validator_index {
 			ValidatorIndex(0 | 1) => Ok(0),
 			ValidatorIndex(2) => Ok(1),
-			ValidatorIndex(_) => Err(criteria::InvalidAssignment),
+			ValidatorIndex(_) => Err(criteria::InvalidAssignment(
+				criteria::InvalidAssignmentReason::ValidatorIndexOutOfBounds,
+			)),
 		},
 	));
 
