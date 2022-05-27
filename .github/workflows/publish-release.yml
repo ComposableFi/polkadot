@@ -1,0 +1,44 @@
+name: Publish release
+
+on: 
+  push:
+    branches:
+      - feat/publish-release/andor0 # tmp
+    tags:
+      # Catches v1.2.3 and v1.2.3-rc1
+      - v[0-9]+.[0-9]+.[0-9]+*
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+    container:
+      image: composablefi/ci-linux:2022-04-18
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Create release
+        id: create-release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.COMPOSABLE_GITHUB_TOKEN }}
+        with:
+          # tag_name: ${{ github.ref }}
+          # release_name: Polkadot ${{ github.ref }}
+
+          tag_name: v0.1.0 # tmp
+          release_name: Polkadot v0.1.0 #tmp
+      
+      - name: Build
+        run: |
+          cargo build --release
+      
+      - name: Upload artifacts
+        id: upload-composable-binary
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ steps.release_drafter.outputs.upload_url }}
+          asset_path: ./target/release/polkadot
+          asset_name: polkadot
+          asset_content_type: application/octet-stream
