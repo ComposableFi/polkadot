@@ -19,7 +19,7 @@ jobs:
           fetch-depth: 0
 
       - name: Create release
-        id: create-release
+        id: create_release
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.COMPOSABLE_GITHUB_TOKEN }}
@@ -38,7 +38,7 @@ jobs:
         id: upload-composable-binary
         uses: actions/upload-release-asset@v1
         with:
-          upload_url: ${{ steps.release_drafter.outputs.upload_url }}
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: ./target/release/polkadot
           asset_name: polkadot
           asset_content_type: application/octet-stream
