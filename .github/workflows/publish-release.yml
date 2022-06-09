@@ -2,8 +2,6 @@ name: Publish release
 
 on: 
   push:
-    branches:
-      - feat/publish-release/andor0 # tmp
     tags:
       # Catches v1.2.3 and v1.2.3-rc1
       - v[0-9]+.[0-9]+.[0-9]+*
@@ -24,12 +22,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.COMPOSABLE_GITHUB_TOKEN }}
         with:
-          # tag_name: ${{ github.ref }}
-          # release_name: Polkadot ${{ github.ref }}
-
-          tag_name: v0.1.4 # tmp
-          release_name: Polkadot v0.1.4 #tmp
-      
+          tag_name: ${{ github.ref }}
+          release_name: Polkadot ${{ github.ref }}
       - name: Build
         run: |
           cargo build --release
