@@ -1932,8 +1932,8 @@ pub fn rococo_local_testnet_config() -> Result<RococoChainSpec, String> {
 		ChainType::Local,
 		move || RococoGenesisExt {
 			runtime_genesis_config: rococo_local_testnet_genesis(wasm_binary),
-			// Use 1 minute session length.
-			session_length_in_blocks: Some(10),
+			// Use 5 minute session length.
+			session_length_in_blocks: Some(100),
 		},
 		vec![],
 		None,
