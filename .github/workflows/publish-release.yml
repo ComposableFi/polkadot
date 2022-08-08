@@ -27,8 +27,8 @@ jobs:
           # tag_name: ${{ github.ref }}
           # release_name: Polkadot ${{ github.ref }}
 
-          tag_name: v0.9.24-5 # tmp
-          release_name: Polkadot v0.9.24-5 #tmp
+          tag_name: v0.9.24-6 # tmp
+          release_name: Polkadot v0.9.24-6 #tmp
       
       - name: Build
         run: |
