@@ -15,11 +15,12 @@ env:
 
 jobs:
   build-and-publish:
-    runs-on: 
-      - self-hosted
-      - linux
-      - x64
-      - sre
+    runs-on: ubuntu-latest
+    # runs-on: 
+    #   - self-hosted
+    #   - linux
+    #   - x64
+    #   - sre
     concurrency:
       group: docker-${{ github.ref }}
       cancel-in-progress: true
