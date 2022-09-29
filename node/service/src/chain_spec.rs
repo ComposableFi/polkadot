@@ -1901,7 +1901,7 @@ pub fn rococo_local_testnet_config() -> Result<RococoChainSpec, String> {
 		move || RococoGenesisExt {
 			runtime_genesis_config: rococo_local_testnet_genesis(wasm_binary),
 			// Use 1 minute session length.
-			session_length_in_blocks: Some(10),
+			session_length_in_blocks: Some(100),
 		},
 		vec![],
 		None,
