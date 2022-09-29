@@ -6,7 +6,7 @@ ARG NIGHTLY_VERSION=nightly
 ENV DEBIAN_FRONTEND=noninteractive
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
-RUN apt-get update && apt-get install -y --no-install-recommends apt-utils build-essential ca-certificates clang curl git libclang-dev libudev-dev llvm pkg-config && \
+RUN apt-get update && apt-get install -y --no-install-recommends apt-utils build-essential ca-certificates clang cmake curl git libclang-dev libudev-dev llvm pkg-config && \
 	curl https://sh.rustup.rs -sSf | sh -s -- -y && \
 	export PATH="$PATH:$HOME/.cargo/bin" && \
 	rustup default stable && \
