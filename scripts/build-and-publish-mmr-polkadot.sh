@@ -2,11 +2,8 @@
 
 REPO=composablefi
 NAME=mmr-polkadot
-# BRANCH=$1
-# TAG=$(echo $BRANCH | sed -E "s/^(.+)-(v.+)$/\2/") # "mmr-polkadot-v0.9.24" -> "v0.9.24"
-
-BRANCH="mmr-polkadot-v0.9.24"
-TAG="test" # tmp
+BRANCH=$1
+TAG=$(echo $BRANCH | sed -E "s/^(.+)-(v.+)$/\2/") # "mmr-polkadot-v0.9.24" -> "v0.9.24"
 
 if [ -z "$BRANCH" ]; then
     echo -e "usage:\n$0 <branch name>"
