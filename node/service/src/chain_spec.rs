@@ -1197,7 +1197,7 @@ pub fn versi_staging_testnet_config() -> Result<RococoChainSpec, String> {
 		ChainType::Live,
 		move || RococoGenesisExt {
 			runtime_genesis_config: rococo_staging_testnet_config_genesis(wasm_binary),
-			session_length_in_blocks: Some(100),
+			session_length_in_blocks: Some(40),
 		},
 		boot_nodes,
 		Some(
@@ -1901,7 +1901,7 @@ pub fn rococo_local_testnet_config() -> Result<RococoChainSpec, String> {
 		move || RococoGenesisExt {
 			runtime_genesis_config: rococo_local_testnet_genesis(wasm_binary),
 			// Use 1 minute session length.
-			session_length_in_blocks: Some(100),
+			session_length_in_blocks: Some(40),
 		},
 		vec![],
 		None,
